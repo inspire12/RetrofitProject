@@ -1,11 +1,14 @@
 package com.example.inspire12.retrofitproject
 
 import android.content.Context
+import android.content.Intent
+import android.net.wifi.aware.IdentityChangedListener
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.example.inspire12.retrofitproject.Model.DemoData
@@ -24,14 +27,21 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : AppCompatActivity() {
 
 
+
     private companion object {
+
         val VIEW_MAIN = 0
         val VIEW_SUB = 1
+        @JvmStatic
+        val intent_title = "TITLE"
+        val intent_url = "URL"
+        val intent_date = "DATE"
+        val intent_size = "SIZE"
     }
 
     private val baseUrl = "http://demo2587971.mockable.io/"
     private lateinit var responseData: JsonObject
-    private lateinit var responsePhotoist: List<Photo>
+    private lateinit var responsePhotoList: List<Photo>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,15 +67,22 @@ class MainActivity : AppCompatActivity() {
                 CustomLog.d(response!!.body()!!.page.toString())
                 // 세팅
                 val body = response.body()
-                responsePhotoist = body!!.photos!!
+                responsePhotoList = body!!.photos!!
                 rvDataList.layoutManager = LinearLayoutManager(baseContext)
 
-                rvDataList.adapter = MyAdapter(responsePhotoist, baseContext)
+                rvDataList.adapter = MyAdapter(responsePhotoList, baseContext, {
+                    item : Photo-> itemClick()
+                })
             }
         })
     }
+    fun itemClick(){
+        intent = Intent(baseContext, DetailActivity::class.java)
 
-    class MyAdapter(items: List<Photo>, context: Context) : RecyclerView.Adapter<MainActivity.ViewHolder>() {
+    }
+
+
+    class MyAdapter(items: List<Photo>, context: Context, val clickListener: (Photo)->Unit) : RecyclerView.Adapter<MainActivity.ViewHolder>() {
 
         val items = items
         val context = context
@@ -85,7 +102,7 @@ class MainActivity : AppCompatActivity() {
                 res = R.layout.item_layout_sub
             }
             val v = LayoutInflater.from(parent.context).inflate(res, parent, false)
-            return ViewHolder(v)
+            return ViewHolder(v, context)
         }
 
         override fun getItemCount(): Int {
@@ -102,7 +119,8 @@ class MainActivity : AppCompatActivity() {
                     holder.itemView.tvLink.setText(items[position].url)
                     Picasso.with(context)
                             .load(items[position].url).placeholder(R.drawable.empty).error(R.drawable.empty)
-                            .centerCrop()
+                            .into(holder.itemView.ivImage)
+                    (holder as ViewHolder).bind(items[position], clickListener)
                 }
                 VIEW_SUB -> {
                     holder.itemView.tvTitle.setText(items[position].title)
@@ -110,9 +128,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
 
+        fun bind(item: Photo, listener: (Photo)-> Unit){
+            itemView.setOnClickListener{listener(item)}
+        }
     }
 }
