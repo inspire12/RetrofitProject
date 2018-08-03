@@ -12,6 +12,7 @@ import com.example.inspire12.retrofitproject.Model.DemoData
 import com.example.inspire12.retrofitproject.Model.Photo
 import com.example.inspire12.retrofitproject.Utils.CustomLog
 import com.google.gson.JsonObject
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_layout.view.*
 import retrofit2.Call
@@ -21,22 +22,30 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
-    val baseUrl = "http://demo2587971.mockable.io/"
-    lateinit var responseData: JsonObject
-    lateinit var responsePhotoist: List<Photo>
+
+
+    private companion object {
+        val VIEW_MAIN = 0
+        val VIEW_SUB = 1
+    }
+
+    private val baseUrl = "http://demo2587971.mockable.io/"
+    private lateinit var responseData: JsonObject
+    private lateinit var responsePhotoist: List<Photo>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         rvDataList.setHasFixedSize(true)
 
-        var retrofit: Retrofit = Retrofit.Builder()
+        val retrofit: Retrofit = Retrofit.Builder()
                 .baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-        var service: DemoService = retrofit.create(DemoService::class.java)
+        val service: DemoService = retrofit.create(DemoService::class.java)
 
-        var request: Call<DemoData> = service.getData()
+        val request: Call<DemoData> = service.getData()
 
         request.enqueue(object : Callback<DemoData> {
             override fun onFailure(call: Call<DemoData>?, t: Throwable?) {
@@ -47,27 +56,36 @@ class MainActivity : AppCompatActivity() {
                 CustomLog.d("success")
                 CustomLog.d(response!!.body()!!.page.toString())
                 // 세팅
-                var body = response.body()
+                val body = response.body()
                 responsePhotoist = body!!.photos!!
                 rvDataList.layoutManager = LinearLayoutManager(baseContext)
 
-                rvDataList.adapter = MyAdapter(responsePhotoist)
+                rvDataList.adapter = MyAdapter(responsePhotoist, baseContext)
             }
         })
     }
 
-    class MyAdapter(items: List<Photo>) : RecyclerView.Adapter<MainActivity.ViewHolder>() {
+    class MyAdapter(items: List<Photo>, context: Context) : RecyclerView.Adapter<MainActivity.ViewHolder>() {
 
         val items = items
+        val context = context
+
+        override fun getItemViewType(position: Int): Int {
+            if (items[position].height == null) {
+                return VIEW_SUB
+            } else {
+                return VIEW_MAIN
+            }
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainActivity.ViewHolder {
-            var res :Int = R.layout.item_layout
+            var res: Int = R.layout.item_layout
 
-
-            var v = LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
-
-            var holder: ViewHolder = ViewHolder(v)
-            return holder
+            if (viewType != VIEW_MAIN) {
+                res = R.layout.item_layout_sub
+            }
+            val v = LayoutInflater.from(parent.context).inflate(res, parent, false)
+            return ViewHolder(v)
         }
 
         override fun getItemCount(): Int {
@@ -75,13 +93,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MainActivity.ViewHolder, position: Int) {
-
-            holder.itemView.tvTitle.setText(items[position].title)
-            holder.itemView.tvDate.setText(items[position].dateTaken)
-            if(items[position].width != null)
-                holder.itemView.tvSize.setText(String.format("%s * %s",items[position].width, items[position].height))
-            holder.itemView.tvLink.setText(items[position].url)
-
+            when (getItemViewType(position)) {
+                VIEW_MAIN -> {
+                    holder.itemView.tvTitle.setText(items[position].title)
+                    holder.itemView.tvDate.setText(items[position].dateTaken)
+                    if (items[position].width != null)
+                        holder.itemView.tvSize.setText(String.format("%s * %s", items[position].width, items[position].height))
+                    holder.itemView.tvLink.setText(items[position].url)
+                    Picasso.with(context)
+                            .load(items[position].url).placeholder(R.drawable.empty).error(R.drawable.empty)
+                            .centerCrop()
+                }
+                VIEW_SUB -> {
+                    holder.itemView.tvTitle.setText(items[position].title)
+                    holder.itemView.tvDate.setText(items[position].dateTaken)
+                }
+            }
         }
     }
 
