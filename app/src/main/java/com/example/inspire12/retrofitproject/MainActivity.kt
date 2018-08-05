@@ -3,8 +3,10 @@ package com.example.inspire12.retrofitproject
 import android.content.Context
 import android.content.Intent
 import android.net.wifi.aware.IdentityChangedListener
+import android.opengl.Visibility
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -96,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                 res = R.layout.item_layout_sub
             }
             val v = LayoutInflater.from(parent.context).inflate(res, parent, false)
-            return ViewHolder(v, context)
+            return ViewHolder(v)
         }
 
         override fun getItemCount(): Int {
@@ -106,18 +108,32 @@ class MainActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MainActivity.ViewHolder, position: Int) {
             when (getItemViewType(position)) {
                 VIEW_MAIN -> {
-                    holder.itemView.tvTitle.setText(items[position].title)
-                    holder.itemView.tvDate.setText(items[position].dateTaken)
-                    if (items[position].width != null)
-                        holder.itemView.tvSize.setText(String.format("%s * %s", items[position].width, items[position].height))
-                    holder.itemView.tvLink.setText(items[position].url)
+                    holder.itemView.tvTitle.visibility = View.INVISIBLE
+                    holder.itemView.tvDate.visibility = View.INVISIBLE
+                    holder.itemView.tvSize.visibility = View.INVISIBLE
+                    holder.itemView.tvLink.visibility = View.INVISIBLE
+                    holder.unbind()
                     Picasso.with(context)
                             .load(items[position].url).placeholder(R.drawable.empty).error(R.drawable.empty)
-                            .into(holder.itemView.ivImage)
+                            .into(holder.itemView.ivImage, object: com.squareup.picasso.Callback{
+                                override fun onSuccess() {
+                                    holder.itemView.tvTitle.visibility = View.VISIBLE
+                                    holder.itemView.tvDate.visibility = View.VISIBLE
+                                    holder.itemView.tvSize.visibility = View.VISIBLE
+                                    holder.itemView.tvLink.visibility = View.VISIBLE
+                                    holder.itemView.tvTitle.setText(items[position].title)
+                                    holder.itemView.tvDate.setText(items[position].dateTaken)
+                                    if (items[position].width != null)
+                                        holder.itemView.tvSize.setText(String.format("%s * %s", items[position].width, items[position].height))
+                                    holder.itemView.tvLink.setText(items[position].url)
+                                    holder.bind( position ,{
+                                        item: Int-> itemClick(position)
+                                    })
+                                }
+                                override fun onError() {
 
-                    (holder).bind(items[position],  position ,{
-                        item: Int-> itemClick(position)
-                    })
+                                }
+                            })
                 }
                 VIEW_SUB -> {
                     holder.itemView.tvTitle.setText(items[position].title)
@@ -133,10 +149,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    class ViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Photo, position: Int, listener: (Int)-> Unit){
+        fun bind(position: Int, listener: (Int)-> Unit){
             itemView.setOnClickListener{listener(position)}
+        }
+        fun unbind(){
+            itemView.setOnClickListener{}
         }
     }
 }
