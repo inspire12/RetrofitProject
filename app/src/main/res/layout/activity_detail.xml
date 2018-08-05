@@ -21,7 +21,7 @@
         app:srcCompat="@drawable/empty" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tvDetailTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ivImage2" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvDetailContent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -42,29 +42,31 @@
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDetailTitle" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tvDetailDate"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="19dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDetailContent" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/tvDetail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/tvDetailDate" />
 </android.support.constraint.ConstraintLayout>

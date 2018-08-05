@@ -23,25 +23,28 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
 
 
-    private companion object {
+    companion object {
 
-        val VIEW_MAIN = 0
-        val VIEW_SUB = 1
+        private val VIEW_MAIN = 0
+        private val VIEW_SUB = 1
         @JvmStatic
         val intent_title = "TITLE"
         val intent_url = "URL"
         val intent_date = "DATE"
         val intent_size = "SIZE"
+        val intent_list = "LIST"
+        val intent_index = "INDEX"
     }
 
     private val baseUrl = "http://demo2587971.mockable.io/"
     private lateinit var responseData: JsonObject
-    private lateinit var responsePhotoList: List<Photo>
+    private lateinit var responsePhotoList: ArrayList<Photo>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,25 +70,16 @@ class MainActivity : AppCompatActivity() {
                 CustomLog.d(response!!.body()!!.page.toString())
                 // 세팅
                 val body = response.body()
-                responsePhotoList = body!!.photos!!
+                responsePhotoList = body!!.photos!! as ArrayList<Photo>
                 rvDataList.layoutManager = LinearLayoutManager(baseContext)
 
-                rvDataList.adapter = MyAdapter(responsePhotoList, baseContext, {
-                    item : Photo-> itemClick()
-                })
+                rvDataList.adapter = MyAdapter(responsePhotoList, baseContext, responsePhotoList)
             }
         })
     }
-    fun itemClick(){
-        intent = Intent(baseContext, DetailActivity::class.java)
-
-    }
 
 
-    class MyAdapter(items: List<Photo>, context: Context, val clickListener: (Photo)->Unit) : RecyclerView.Adapter<MainActivity.ViewHolder>() {
-
-        val items = items
-        val context = context
+    class MyAdapter(val items: List<Photo>, val context: Context, val responsePhotoList:ArrayList<Photo>) : RecyclerView.Adapter<MainActivity.ViewHolder>() {
 
         override fun getItemViewType(position: Int): Int {
             if (items[position].height == null) {
@@ -120,7 +114,10 @@ class MainActivity : AppCompatActivity() {
                     Picasso.with(context)
                             .load(items[position].url).placeholder(R.drawable.empty).error(R.drawable.empty)
                             .into(holder.itemView.ivImage)
-                    (holder as ViewHolder).bind(items[position], clickListener)
+
+                    (holder).bind(items[position],  position ,{
+                        item: Int-> itemClick(position)
+                    })
                 }
                 VIEW_SUB -> {
                     holder.itemView.tvTitle.setText(items[position].title)
@@ -128,13 +125,18 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
+        fun itemClick(position: Int){
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putParcelableArrayListExtra(MainActivity.intent_list, responsePhotoList)
+            intent.putExtra(MainActivity.intent_index, position)
+            context.startActivity(intent)
+        }
     }
 
     class ViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(item: Photo, listener: (Photo)-> Unit){
-            itemView.setOnClickListener{listener(item)}
+        fun bind(item: Photo, position: Int, listener: (Int)-> Unit){
+            itemView.setOnClickListener{listener(position)}
         }
     }
 }
