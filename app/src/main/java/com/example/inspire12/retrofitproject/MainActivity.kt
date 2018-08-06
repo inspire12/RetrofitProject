@@ -113,6 +113,8 @@ class MainActivity : AppCompatActivity() {
                     holder.itemView.tvSize.visibility = View.INVISIBLE
                     holder.itemView.tvLink.visibility = View.INVISIBLE
                     holder.unbind()
+
+
                     Picasso.with(context)
                             .load(items[position].url).placeholder(R.drawable.empty).error(R.drawable.empty)
                             .into(holder.itemView.ivImage, object: com.squareup.picasso.Callback{
