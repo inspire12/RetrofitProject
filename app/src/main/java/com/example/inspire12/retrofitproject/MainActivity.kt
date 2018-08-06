@@ -7,14 +7,18 @@ import android.opengl.Visibility
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.os.Parcelable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.example.inspire12.retrofitproject.Model.DemoData
 import com.example.inspire12.retrofitproject.Model.Photo
+import com.example.inspire12.retrofitproject.Presenter.PhotoAdapterPresenter
+import com.example.inspire12.retrofitproject.Presenter.PhotoViewHolderPresenter
 import com.example.inspire12.retrofitproject.Utils.CustomLog
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
@@ -33,8 +37,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
 
-        private val VIEW_MAIN = 0
-        private val VIEW_SUB = 1
+        val VIEW_MAIN = 0
+        val VIEW_SUB = 1
         @JvmStatic
         val intent_title = "TITLE"
         val intent_url = "URL"
@@ -74,21 +78,34 @@ class MainActivity : AppCompatActivity() {
                 val body = response.body()
                 responsePhotoList = body!!.photos!! as ArrayList<Photo>
                 rvDataList.layoutManager = LinearLayoutManager(baseContext)
-
-                rvDataList.adapter = MyAdapter(responsePhotoList, baseContext, responsePhotoList)
+                val adapter = MyAdapter(baseContext)
+                adapter.onDataChange(responsePhotoList)
+                rvDataList.adapter = adapter
             }
         })
     }
 
 
-    class MyAdapter(val items: List<Photo>, val context: Context, val responsePhotoList:ArrayList<Photo>) : RecyclerView.Adapter<MainActivity.ViewHolder>() {
+    class MyAdapter(val context: Context) : RecyclerView.Adapter<MainActivity.ViewHolder>(), PhotoAdapterPresenter.View {
+
+        override fun notifyAdapter() {
+            notifyDataSetChanged()
+        }
+
+        var adapterPresenter = PhotoAdapterPresenter()
+
+        init{
+            adapterPresenter.view = this
+        }
+
+        private var items = mutableListOf<Photo>()
+
+        fun onDataChange(inputItems : ArrayList<Photo>){
+            adapterPresenter.onDataChange(inputItems)
+        }
 
         override fun getItemViewType(position: Int): Int {
-            if (items[position].height == null) {
-                return VIEW_SUB
-            } else {
-                return VIEW_MAIN
-            }
+            return adapterPresenter.viewType(items[position].height)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainActivity.ViewHolder {
@@ -101,9 +118,8 @@ class MainActivity : AppCompatActivity() {
             return ViewHolder(v)
         }
 
-        override fun getItemCount(): Int {
-            return items.size
-        }
+        override fun getItemCount(): Int = items.size
+
 
         override fun onBindViewHolder(holder: MainActivity.ViewHolder, position: Int) {
             when (getItemViewType(position)) {
@@ -145,19 +161,44 @@ class MainActivity : AppCompatActivity() {
         }
         fun itemClick(position: Int){
             val intent = Intent(context, DetailActivity::class.java)
-            intent.putParcelableArrayListExtra(MainActivity.intent_list, responsePhotoList)
+            intent.putParcelableArrayListExtra(MainActivity.intent_list, items as ArrayList<out Parcelable>)
             intent.putExtra(MainActivity.intent_index, position)
             context.startActivity(intent)
         }
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), PhotoViewHolderPresenter.View {
+
+        var holderPresenter = PhotoViewHolderPresenter()
+
+        init{
+            holderPresenter.view = this
+        }
 
         fun bind(position: Int, listener: (Int)-> Unit){
             itemView.setOnClickListener{listener(position)}
         }
         fun unbind(){
             itemView.setOnClickListener{}
+        }
+
+        override fun setTitle(title: String) {
+            itemView.findViewById<TextView>(R.id.tvTitle).setText(title)
+        }
+
+        override fun setDate(date: String) {
+            itemView.findViewById<TextView>(R.id.tvDate).setText(date)
+        }
+
+        override fun setLink(url: String) {
+        //    Picasso.with()
+        }
+
+        override fun setSize(width: String, height: String) {
+            
+        }
+
+        override fun setImage(src: String) {
         }
     }
 }
