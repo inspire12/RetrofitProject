@@ -1,8 +1,8 @@
-package com.example.inspire12.retrofitproject.Presenter
+package com.example.inspire12.retrofitproject.presenter
 
-import android.view.View
 import com.example.inspire12.retrofitproject.MainActivity
-import com.example.inspire12.retrofitproject.Model.Photo
+import com.example.inspire12.retrofitproject.model.Photo
+import com.example.inspire12.retrofitproject.R
 
 class PhotoAdapterPresenter{
     var view: View? = null
@@ -29,7 +29,15 @@ class PhotoAdapterPresenter{
             return MainActivity.VIEW_MAIN
         }
     }
+    fun getViewRes(viewType:Int): Int{
+        var res: Int = R.layout.item_layout
 
+        if (viewType != MainActivity.VIEW_MAIN) {
+            res = R.layout.item_layout_sub
+        }
+        return res
+    }
+    // 비동기 처리
     interface View{
         fun notifyAdapter()
     }

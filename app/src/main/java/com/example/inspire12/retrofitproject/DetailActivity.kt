@@ -5,10 +5,8 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout.MODE_SCROLLABLE
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
-import android.widget.ImageView
-import com.example.inspire12.retrofitproject.Model.Photo
-import com.example.inspire12.retrofitproject.Utils.CustomLog
-import com.squareup.picasso.Picasso
+import com.example.inspire12.retrofitproject.model.Photo
+import com.example.inspire12.retrofitproject.utils.CustomLog
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {

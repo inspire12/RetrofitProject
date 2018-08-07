@@ -2,24 +2,23 @@ package com.example.inspire12.retrofitproject
 
 import android.content.Context
 import android.content.Intent
-import android.net.wifi.aware.IdentityChangedListener
-import android.opengl.Visibility
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import com.example.inspire12.retrofitproject.Model.DemoData
-import com.example.inspire12.retrofitproject.Model.Photo
-import com.example.inspire12.retrofitproject.Utils.CustomLog
+import com.example.inspire12.retrofitproject.model.DemoData
+import com.example.inspire12.retrofitproject.model.Photo
+import com.example.inspire12.retrofitproject.presenter.PhotoAdapterPresenter
+import com.example.inspire12.retrofitproject.utils.CustomLog
+import com.example.inspire12.retrofitproject.model.viewholder.PhotoViewHolder
 import com.google.gson.JsonObject
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_layout.view.*
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,8 +32,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
 
-        private val VIEW_MAIN = 0
-        private val VIEW_SUB = 1
+        val VIEW_MAIN = 0
+        val VIEW_SUB = 1
         @JvmStatic
         val intent_title = "TITLE"
         val intent_url = "URL"
@@ -81,31 +80,30 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    class MyAdapter(val items: List<Photo>, val context: Context, val responsePhotoList:ArrayList<Photo>) : RecyclerView.Adapter<MainActivity.ViewHolder>() {
+    class MyAdapter(val items: List<Photo>, val context: Context, val responsePhotoList:ArrayList<Photo>)
+        : RecyclerView.Adapter<PhotoViewHolder>(), PhotoAdapterPresenter.View {
+
+        val mAdapterPresenter = PhotoAdapterPresenter()
+
+        init{
+            mAdapterPresenter.view = this
+        }
 
         override fun getItemViewType(position: Int): Int {
-            if (items[position].height == null) {
-                return VIEW_SUB
-            } else {
-                return VIEW_MAIN
-            }
+            return mAdapterPresenter.viewType(items[position].height)
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainActivity.ViewHolder {
-            var res: Int = R.layout.item_layout
-
-            if (viewType != VIEW_MAIN) {
-                res = R.layout.item_layout_sub
-            }
-            val v = LayoutInflater.from(parent.context).inflate(res, parent, false)
-            return ViewHolder(v)
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
+            return PhotoViewHolder(LayoutInflater.from(parent.context).inflate(mAdapterPresenter.getViewRes(viewType), parent, false))
         }
+
+
 
         override fun getItemCount(): Int {
             return items.size
-        }
+          }
 
-        override fun onBindViewHolder(holder: MainActivity.ViewHolder, position: Int) {
+        override fun onBindViewHolder(holder:PhotoViewHolder, position: Int) {
             when (getItemViewType(position)) {
                 VIEW_MAIN -> {
                     holder.itemView.tvTitle.visibility = View.INVISIBLE
@@ -141,21 +139,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        override fun notifyAdapter() {
+        }
+
         fun itemClick(position: Int){
             val intent = Intent(context, DetailActivity::class.java)
             intent.putParcelableArrayListExtra(MainActivity.intent_list, responsePhotoList)
             intent.putExtra(MainActivity.intent_index, position)
             context.startActivity(intent)
-        }
-    }
-
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        fun bind(position: Int, listener: (Int)-> Unit){
-            itemView.setOnClickListener{listener(position)}
-        }
-        fun unbind(){
-            itemView.setOnClickListener{}
         }
     }
 }

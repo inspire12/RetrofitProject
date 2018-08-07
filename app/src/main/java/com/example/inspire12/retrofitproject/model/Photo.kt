@@ -1,4 +1,4 @@
-package com.example.inspire12.retrofitproject.Model
+package com.example.inspire12.retrofitproject.model
 
 import android.os.Parcel
 import android.os.Parcelable

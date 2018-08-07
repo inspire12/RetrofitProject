@@ -1,4 +1,4 @@
-package com.example.inspire12.retrofitproject.Presenter
+package com.example.inspire12.retrofitproject.presenter
 
 class PhotoViewHolderPresenter {
     var adapterPresenter: PhotoAdapterPresenter? = null
