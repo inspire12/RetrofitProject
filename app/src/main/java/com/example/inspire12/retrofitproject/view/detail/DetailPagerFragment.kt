@@ -1,4 +1,4 @@
-package com.example.inspire12.retrofitproject
+package com.example.inspire12.retrofitproject.view.detail
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.inspire12.retrofitproject.R
 import com.example.inspire12.retrofitproject.model.Photo
 import com.squareup.picasso.Picasso
 

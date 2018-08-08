@@ -1,12 +1,13 @@
-package com.example.inspire12.retrofitproject
+package com.example.inspire12.retrofitproject.view.detail
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.TabLayout.MODE_SCROLLABLE
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
+import com.example.inspire12.retrofitproject.R
 import com.example.inspire12.retrofitproject.model.Photo
 import com.example.inspire12.retrofitproject.utils.CustomLog
+import com.example.inspire12.retrofitproject.view.main.MainActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
@@ -17,11 +18,9 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        //getData = intent.getParcelableArrayListExtra(MainActivity.intent_list)
         getIndex = intent.getIntExtra(MainActivity.intent_index, 0)
         getData = intent.getParcelableArrayListExtra(MainActivity.intent_list)
         CustomLog.d(getIndex.toString())
-
 
         viewPager.apply{
 
@@ -36,9 +35,11 @@ class DetailActivity : AppCompatActivity() {
             }
             setCurrentItem(getIndex)
         }
-        //tlPagerIndicator.setPadding(tlPagerIndicator.paddingLeft, viewPager.findViewById<ImageView>(R.id.ivImage2).height + 20, tlPagerIndicator.paddingRight, tlPagerIndicator.paddingBottom)
-        tlPagerIndicator.setupWithViewPager(viewPager, true)
-        tlPagerIndicator.tabMode = MODE_SCROLLABLE
+
+        pageIndicatorView.attachToPager(viewPager)
+//        tlPagerIndicator.tabMode = MODE_SCROLLABLE
+//        tlPagerIndicator.setScrollPosition(getIndex, 0F, true)
+//        tlPagerIndicator.setupWithViewPager(viewPager, false)
 
     }
 }
