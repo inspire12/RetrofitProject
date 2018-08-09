@@ -13,6 +13,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class MainActivity : AppCompatActivity(), MainContract.View {
+    private var mPresenter: MainContract.Presenter? = null
+
+    init {
+        // 생성시 mPresenter 초기화
+        mPresenter = MainPresenter(this)
+    }
 
     companion object {
         val VIEW_MAIN = 0
@@ -21,12 +27,7 @@ class MainActivity : AppCompatActivity(), MainContract.View {
         val intent_list = "LIST"
         val intent_index = "INDEX"
     }
-    private var mPresenter: MainContract.Presenter? = null
 
-    init {
-        // 생성시 mPresenter 초기화
-        mPresenter = MainPresenter(this)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

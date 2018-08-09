@@ -24,7 +24,8 @@ class PhotoAdapterPresenter : PhotoAdapterContract.Presenter{
 
     override fun loadImage(context: Context, url: String) : RequestCreator {
         return Picasso.with(context)
-                .load(url).placeholder(R.drawable.empty).error(R.drawable.empty)
+                .load(url)
+                .placeholder(R.drawable.empty).error(R.drawable.empty)
     }
 
 }
