@@ -8,12 +8,11 @@ interface PhotoAdapterContract {
 
     interface View {
         fun setPresenter(presenter: Presenter)
-        fun onGetViewType(position: Int)
+
     }
 
     interface Presenter{
         fun loadImage(context: Context, url: String): RequestCreator
-        fun getNotifyAdapter():Job
-        fun getViewType(height: String?): Job
+
     }
 }

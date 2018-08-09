@@ -9,29 +9,9 @@ import com.squareup.picasso.RequestCreator
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 
-//(private val mView: PhotoAdapterContract.View)
 class PhotoAdapterPresenter : PhotoAdapterContract.Presenter{
 
-
     var view: PhotoAdapterContract.View? = null
-
-    private var items = mutableListOf<Photo>()
-
-    fun onDataChange(inputItems: List<Photo>){
-        items.forEach{
-            if(!items.contains(it)){
-                items.add(it)
-            }
-        }
-       // view?.onGetNotifyAdapter() // 리스너
-    }
-
-    fun getCount(): Int = items.size
-
-    fun getItemAt(position: Int) = items[position]
-    // infix??
-    infix fun itemAtPosition(position: Int): Photo = items[position]
-
 
     fun getViewRes(viewType:Int): Int{
         var res: Int = R.layout.item_layout
@@ -47,16 +27,4 @@ class PhotoAdapterPresenter : PhotoAdapterContract.Presenter{
                 .load(url).placeholder(R.drawable.empty).error(R.drawable.empty)
     }
 
-
-    override fun getNotifyAdapter() = launch(UI) {
-
-    }
-
-    override fun getViewType(height: String?)= launch(UI) {
-//        if (height == null) {
-//            return MainActivity.VIEW_SUB
-//        } else {
-//            return MainActivity.VIEW_MAIN
-//        }
-    }
 }

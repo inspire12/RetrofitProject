@@ -36,6 +36,7 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttpVersion"
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.android.support:design:27.1.1'
     implementation "ru.tinkoff.scrollingpagerindicator:scrollingpagerindicator:1.0.5"
     implementation 'com.android.support:support-annotations:27.1.1'

@@ -12,13 +12,13 @@ interface MainContract {
      */
     interface View : BaseContract.View{
         fun setPresenter(presenter:MainContract.Presenter)
-        fun onLoadSetReclerView(success: Boolean, data: ArrayList<Photo>)
+        fun onLoadSetReclerView(success: Boolean, data: ArrayList<Photo>?)
     }
 
     /**
      * View에서 전달된 이벤트 대한 처리
      */
     interface Presenter : BaseContract.Presenter{
-        fun loadSetReclyclerView(data:ArrayList<Photo>): Job
+        fun loadSetReclyclerView(): Job
     }
 }

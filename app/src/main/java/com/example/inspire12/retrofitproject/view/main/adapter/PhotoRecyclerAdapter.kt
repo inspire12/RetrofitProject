@@ -28,9 +28,6 @@ class PhotoRecyclerAdapter(val items: List<Photo>, val context: Context)
         mPresenter = presenter
     }
 
-    override fun onGetViewType(position: Int) {
-        mPresenter?.getViewType(items[position].height)
-    }
 
     val mAdapterPresenter = PhotoAdapterPresenter()
 
@@ -40,7 +37,7 @@ class PhotoRecyclerAdapter(val items: List<Photo>, val context: Context)
 
     //
     override fun getItemViewType(position: Int): Int {
-        if (items[position].height == null) {
+        if (items[position].url == null) {
             return MainActivity.VIEW_SUB
         } else {
             return MainActivity.VIEW_MAIN
@@ -55,37 +52,28 @@ class PhotoRecyclerAdapter(val items: List<Photo>, val context: Context)
         return items.size
     }
 
-
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         when (getItemViewType(position)) {
             MainActivity.VIEW_MAIN -> {
                 //초기화
                 holder.showProgress()
-                holder.unbind()
+                holder.itemView.tvTitle.setText(items[position].title)
+                holder.itemView.tvDate.setText(items[position].dateTaken)
 
-                /**
-                 * TODO:
-                 * 질문, 데이터 로드의 경우 presenter에서 모델을 통해 호출해야할 거 같은데
-                 * 분리를 어떻게 해야하는지 모르겠습니다.
-                 */
-//                mPresenter?.loadImage(context, "").into()
+                // 2. Presenter에 이벤트 전달
+                holder.mPresenter?.setSize(items[position].width, items[position].height)
+
+                holder.itemView.tvLink.setText(items[position].url)
+                holder.bind(position, { item: Int ->
+                    itemClick(position)
+                })
+
                 Picasso.with(context)
                         .load(items[position].url).placeholder(R.drawable.empty).error(R.drawable.empty)
                         .into(holder.itemView.ivImage, object : com.squareup.picasso.Callback {
                             override fun onSuccess() {
                                 // 1. 이벤트 발생
                                 holder.hideProgress()
-                                holder.itemView.tvTitle.setText(items[position].title)
-                                holder.itemView.tvDate.setText(items[position].dateTaken)
-
-                                // 2. Presenter에 이벤트 전달
-                                holder.mPresenter?.setSize(items[position].width, items[position].height)
-
-                                holder.itemView.tvLink.setText(items[position].url)
-                                holder.bind(position, { item: Int ->
-                                    itemClick(position)
-                                })
-                                //holder.mPresenter?.bindItemClick(position, itemClick(position))
                             }
 
                             override fun onError() {
@@ -96,6 +84,9 @@ class PhotoRecyclerAdapter(val items: List<Photo>, val context: Context)
             MainActivity.VIEW_SUB -> {
                 holder.itemView.tvTitle.setText(items[position].title)
                 holder.itemView.tvDate.setText(items[position].dateTaken)
+                holder.bind(position, { item: Int ->
+                    itemClick(position)
+                })
             }
         }
     }
