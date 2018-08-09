@@ -51,8 +51,6 @@ class MainActivity : AppCompatActivity(), MainContract.View {
                 // 세팅
                 val body = response?.body()
                 responsePhotoList = body!!.photos!! as ArrayList<Photo>
-//                rvDataList.layoutManager = LinearLayoutManager(baseContext)
-//                rvDataList.adapter = PhotoRecyclerAdapter(responsePhotoList, baseContext)
 
                 mPresenter?.loadSetReclyclerView(responsePhotoList)
             }
@@ -74,11 +72,5 @@ class MainActivity : AppCompatActivity(), MainContract.View {
     }
 
     override fun hideProgress() {
-    }
-
-    private fun initView(){
-        rvDataList.layoutManager = LinearLayoutManager(baseContext)
-        rvDataList.adapter = PhotoRecyclerAdapter(responsePhotoList, baseContext)
-
     }
 }

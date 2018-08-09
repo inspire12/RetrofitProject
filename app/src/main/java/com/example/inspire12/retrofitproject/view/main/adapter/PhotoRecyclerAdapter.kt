@@ -68,6 +68,7 @@ class PhotoRecyclerAdapter(val items: List<Photo>, val context: Context)
                  * 질문, 데이터 로드의 경우 presenter에서 모델을 통해 호출해야할 거 같은데
                  * 분리를 어떻게 해야하는지 모르겠습니다.
                  */
+//                mPresenter?.loadImage(context, "").into()
                 Picasso.with(context)
                         .load(items[position].url).placeholder(R.drawable.empty).error(R.drawable.empty)
                         .into(holder.itemView.ivImage, object : com.squareup.picasso.Callback {

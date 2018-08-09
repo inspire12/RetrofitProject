@@ -12,7 +12,6 @@ interface MainContract {
      */
     interface View : BaseContract.View{
         fun setPresenter(presenter:MainContract.Presenter)
-
         fun onLoadSetReclerView(success: Boolean, data: ArrayList<Photo>)
     }
 
