@@ -4,9 +4,11 @@ import com.example.inspire12.retrofitproject.model.DemoData
 import com.example.inspire12.retrofitproject.model.Photo
 import com.example.inspire12.retrofitproject.network.NetworkUtils
 import com.example.inspire12.retrofitproject.utils.CustomLog
+import com.example.inspire12.retrofitproject.view.main.MessageEvent
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,7 +30,8 @@ class MainPresenter(val mView: MainContract.View)
                 // 세팅
                 val body = response?.body()
                 val data = body!!.photos!! as ArrayList<Photo>
-                mView.onLoadSetReclerView(true, data)
+                EventBus.getDefault().post(MessageEvent(data))
+                //mView.onLoadSetReclerView(true, data)
             }
         })
     }
