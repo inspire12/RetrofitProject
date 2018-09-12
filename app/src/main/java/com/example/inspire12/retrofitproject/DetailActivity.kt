@@ -2,13 +2,13 @@ package com.example.inspire12.retrofitproject
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.TabLayout.MODE_SCROLLABLE
+
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.widget.ImageView
 import com.example.inspire12.retrofitproject.Model.Photo
 import com.example.inspire12.retrofitproject.Utils.CustomLog
-import com.squareup.picasso.Picasso
+
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
@@ -38,9 +38,10 @@ class DetailActivity : AppCompatActivity() {
             }
             setCurrentItem(getIndex)
         }
+        indicator.attachToPager(viewPager)
         //tlPagerIndicator.setPadding(tlPagerIndicator.paddingLeft, viewPager.findViewById<ImageView>(R.id.ivImage2).height + 20, tlPagerIndicator.paddingRight, tlPagerIndicator.paddingBottom)
-        tlPagerIndicator.setupWithViewPager(viewPager, true)
-        tlPagerIndicator.tabMode = MODE_SCROLLABLE
+
+        //tlPagerIndicator.tabMode = MODE_SCROLLABLE
 
     }
 }

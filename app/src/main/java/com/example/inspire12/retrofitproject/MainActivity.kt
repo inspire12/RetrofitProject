@@ -29,10 +29,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-
-
     companion object {
-
         private val VIEW_MAIN = 0
         private val VIEW_SUB = 1
         @JvmStatic
@@ -119,23 +116,25 @@ class MainActivity : AppCompatActivity() {
                             .load(items[position].url).placeholder(R.drawable.empty).error(R.drawable.empty)
                             .into(holder.itemView.ivImage, object: com.squareup.picasso.Callback{
                                 override fun onSuccess() {
-                                    holder.itemView.tvTitle.visibility = View.VISIBLE
-                                    holder.itemView.tvDate.visibility = View.VISIBLE
-                                    holder.itemView.tvSize.visibility = View.VISIBLE
-                                    holder.itemView.tvLink.visibility = View.VISIBLE
-                                    holder.itemView.tvTitle.setText(items[position].title)
-                                    holder.itemView.tvDate.setText(items[position].dateTaken)
-                                    if (items[position].width != null)
-                                        holder.itemView.tvSize.setText(String.format("%s * %s", items[position].width, items[position].height))
-                                    holder.itemView.tvLink.setText(items[position].url)
-                                    holder.bind( position ,{
-                                        item: Int-> itemClick(position)
-                                    })
+
                                 }
                                 override fun onError() {
 
                                 }
                             })
+
+                    holder.itemView.tvTitle.visibility = View.VISIBLE
+                    holder.itemView.tvDate.visibility = View.VISIBLE
+                    holder.itemView.tvSize.visibility = View.VISIBLE
+                    holder.itemView.tvLink.visibility = View.VISIBLE
+                    holder.itemView.tvTitle.setText(items[position].title)
+                    holder.itemView.tvDate.setText(items[position].dateTaken)
+                    if (items[position].width != null)
+                        holder.itemView.tvSize.setText(String.format("%s * %s", items[position].width, items[position].height))
+                    holder.itemView.tvLink.setText(items[position].url)
+                    holder.bind( position ,{
+                        item: Int-> itemClick(position)
+                    })
                 }
                 VIEW_SUB -> {
                     holder.itemView.tvTitle.setText(items[position].title)
