@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.inspire12.retrofitproject.dataModel.Photo
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.RequestCreator
 
 
 private const val ARG_PARAM1 = "param1"
@@ -25,7 +26,8 @@ class DetailPagerFragment : Fragment() {
 
     lateinit var getListData: ArrayList<Photo>
     var getIndex: Int = 0
-
+    lateinit var data: Photo
+    lateinit var picasso: RequestCreator
     /**
      * Activity 에서 데이터를 받음
      */
@@ -38,17 +40,21 @@ class DetailPagerFragment : Fragment() {
     }
 
     /**
-     * 컴포넌트 View을 Activity에 생성하고
+     * 데이터를 불러오고 컴포넌트 View을 Activity에 생성
      */
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_detail_pager, container, false)
+        data = getListData[getIndex]
+        val view = inflater.inflate(R.layout.fragment_detail_pager, container, false)
+        picasso = Picasso.with(context).load(data.url)
+        return view
     }
 
+    /**
+     * 생성된 뷰에 이미지와 데이터를 바인딩
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val data = getListData[getIndex]
-
-        Picasso.with(context).load(data.url).into(view.findViewById<ImageView>(R.id.ivImage2))
+        picasso.into(view.findViewById<ImageView>(R.id.ivImage2))
         view.apply {
             findViewById<TextView>(R.id.tvDetailTitle).setText(data.title)
             findViewById<TextView>(R.id.tvDetailDate).setText(data.dateTaken)
@@ -58,7 +64,9 @@ class DetailPagerFragment : Fragment() {
         }
     }
 
-
+    /**
+     * fragment 객체 처리
+     */
     companion object {
         @JvmStatic
         fun newInstance(getListData: ArrayList<Photo>, index: Int) =
