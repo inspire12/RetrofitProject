@@ -1,6 +1,5 @@
-package com.example.inspire12.retrofitproject.Model
+package com.example.inspire12.retrofitproject.dataModel
 
-import com.example.inspire12.retrofitproject.Model.Photo
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 

@@ -1,4 +1,4 @@
-package com.example.inspire12.retrofitproject.Utils
+package com.example.inspire12.retrofitproject.utils
 
 
 import android.util.Log

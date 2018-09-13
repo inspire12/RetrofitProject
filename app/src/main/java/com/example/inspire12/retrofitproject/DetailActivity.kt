@@ -5,9 +5,9 @@ import android.os.Bundle
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
-import android.widget.ImageView
-import com.example.inspire12.retrofitproject.Model.Photo
-import com.example.inspire12.retrofitproject.Utils.CustomLog
+import com.example.inspire12.retrofitproject.dataModel.Photo
+import com.example.inspire12.retrofitproject.utils.CustomLog
+import com.example.inspire12.retrofitproject.view.MainActivity
 
 import kotlinx.android.synthetic.main.activity_detail.*
 

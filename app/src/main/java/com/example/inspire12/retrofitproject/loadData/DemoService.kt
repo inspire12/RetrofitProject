@@ -1,6 +1,6 @@
-package com.example.inspire12.retrofitproject
+package com.example.inspire12.retrofitproject.loadData
 
-import com.example.inspire12.retrofitproject.Model.DemoData
+import com.example.inspire12.retrofitproject.dataModel.DemoData
 import retrofit2.Call
 import retrofit2.http.GET
 
