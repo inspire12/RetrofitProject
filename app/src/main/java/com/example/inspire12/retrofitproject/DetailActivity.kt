@@ -13,8 +13,9 @@ import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
 
-    lateinit var getData : ArrayList<Photo>
     var getIndex : Int = 0
+    lateinit var getData : ArrayList<Photo>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -22,7 +23,6 @@ class DetailActivity : AppCompatActivity() {
         //getData = intent.getParcelableArrayListExtra(MainActivity.intent_list)
         getIndex = intent.getIntExtra(MainActivity.intent_index, 0)
         getData = intent.getParcelableArrayListExtra(MainActivity.intent_list)
-        CustomLog.d(getIndex.toString())
 
 
         viewPager.apply{
@@ -39,9 +39,5 @@ class DetailActivity : AppCompatActivity() {
             setCurrentItem(getIndex)
         }
         indicator.attachToPager(viewPager)
-        //tlPagerIndicator.setPadding(tlPagerIndicator.paddingLeft, viewPager.findViewById<ImageView>(R.id.ivImage2).height + 20, tlPagerIndicator.paddingRight, tlPagerIndicator.paddingBottom)
-
-        //tlPagerIndicator.tabMode = MODE_SCROLLABLE
-
     }
 }

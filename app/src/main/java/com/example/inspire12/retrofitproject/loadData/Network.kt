@@ -19,9 +19,9 @@ import kotlin.collections.ArrayList
 *
 * */
 
-class Network() : Publisher{
+class Network : Publisher{
 
-    lateinit var observers :ArrayList<Observer>
+    private var observers :ArrayList<Observer>
     var data: ArrayList<Photo>? = null;
     init {
         observers = ArrayList()
@@ -41,8 +41,8 @@ class Network() : Publisher{
 
             override fun onResponse(call: Call<DemoData>?, response: Response<DemoData>?) {
                 CustomLog.d("success")
-                data = response!!.body()!!.photos!! as ArrayList<Photo>
-// data 전달, observer noti에 에서 알림
+                // data 전달, observer noti에 에서 알림
+                data = response?.body()?.photos!! as ArrayList<Photo>
                 notifyObserver()
             }
         })

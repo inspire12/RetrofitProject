@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.item_layout.view.*
 import java.util.ArrayList
 
 
-class MyAdapter(val items: List<Photo>?, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
+class MyListAdapter(val items: List<Photo>?, val context: Context) : RecyclerView.Adapter<ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         var res: Int = R.layout.item_layout
